@@ -64,8 +64,8 @@ TODO
 ## Project Checklist
 
 ### Development Environment
-- [ ] Environment setup (Maven, JUnit, JaCoCo)
-- [ ] Working CI pipeline with tests and coverage
+- [X] Environment setup (Maven, JUnit, JaCoCo)
+- [X] Working CI pipeline with tests and coverage
 
 ### Library Features
 - [ ] Implementation of `Series` and `DataFrame`
