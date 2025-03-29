@@ -35,7 +35,6 @@ It is developed as part of a university course, with a strong emphasis on DevOps
 | CI/CD            | GitHub Actions                    |
 | Containerization | Docker                            |
 | Cloud Deployment | Google Cloud (Terraform, Ansible) |
-| Documentation    | Javadoc, GitHub Pages             |
 
 ## Git Workflow
 
