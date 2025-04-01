@@ -130,11 +130,12 @@ public class ConversionUtils {
             } else if (row.charAt(i) == delimiter && !opened_quote) {
                 parsed_string.add(sb.toString().trim());
                 sb.setLength(0);
-            } else {
+            } else if (!(i == row.length() - 1 && row.charAt(i) == '\"')) {
                 sb.append(row.charAt(i));
             }
             i++;
         }
+        parsed_string.add(sb.toString().trim());
         return parsed_string;
     }
 }

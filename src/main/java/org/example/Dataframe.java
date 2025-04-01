@@ -10,7 +10,7 @@ import java.util.List;
  * Represents a dataframe structure containing multiple series of data.
  */
 public class Dataframe {
-    Serie<?>[] data_tab;
+    public Serie<?>[] data_tab;
 
     /**
      * Constructs a Dataframe from variable arguments where each argument represents a column of data.
@@ -18,7 +18,6 @@ public class Dataframe {
      * @param input_series Set of multiple array that will be used as column in the Dataframe
      * @throws IllegalArgumentException If any input series cannot be properly converted.
      */
-    @SuppressWarnings("unchecked")
     public Dataframe(Object ...input_series) {
         data_tab = new Serie[input_series.length];
         for (int  i = 0; i < input_series.length; i++) {
@@ -44,6 +43,10 @@ public class Dataframe {
 
             ArrayList<String>[] data_columns = null;
             while ((line = reader.readLine()) != null) {
+                if (line.isEmpty()) {
+                    continue;
+                }
+
                 values = ConversionUtils.parseCSVRow(line, delimiter);
                 if (data_columns == null) {
                     data_columns = new ArrayList[values.size()];
@@ -53,14 +56,14 @@ public class Dataframe {
                     if (data_columns[i] == null) {
                         data_columns[i] = new ArrayList<>();
                     }
-
                     data_columns[i].add(values.get(i));
                 }
             }
-
             data_tab = new Serie[data_columns.length];
             for (int i = 0; i < data_columns.length; i++) {
                 data_tab[i] = new Serie<>(ConversionUtils.convertStringListToTypedList(data_columns[i].subList(1, data_columns[i].size())),data_columns[i].get(0));
+                System.out.println(data_tab[i].getData());
+
             }
         }
     }
@@ -77,7 +80,11 @@ public class Dataframe {
         for (int i = 0; i < data_tab.length; i++) {
             columnWidths[i] = data_tab[i].getName().length();
             for (Object value : data_tab[i].getData()) {
-                columnWidths[i] = Math.max(columnWidths[i], value.toString().length());
+                if (value == null) {
+                    columnWidths[i] = Math.max(columnWidths[i], 4);
+                } else {
+                    columnWidths[i] = Math.max(columnWidths[i], value.toString().length());
+                }
             }
             columnWidths[i] += 4;
         }
