@@ -48,66 +48,73 @@ public class ConversionUtils {
         throw new IllegalArgumentException("Unsuported array type : " + array.getClass().getSimpleName());
     }
 
-    private enum stringParsedType {
-        UNKNOWN, EMPTY, INT, DOUBLE, BOOL, STRING
-    }
-
-    public static List<?> convertStringListToTypedList(List<String> list) {
+    public static <T> List<T> convertStringListToTypedList(List<String> list) {
         /**
-         * Parse a list of String to get it converted into a typed list
+         * Parse a list of String to get it converted into a single type list
          *
          * @param list the list to convert
          * @return typed array after parsing strings
          */
-        List<Object> convertedList = new ArrayList<>();
-
+        // first let's determine the common type of the list
+        Class<?> type = parseStringType(list.get(0));
         for (String s : list) {
-            switch (parseStringType(s)) {
-                case INT:
-                    convertedList.add(Integer.parseInt(s));
-                    break;
-                case DOUBLE:
-                    convertedList.add(Double.parseDouble(s));
-                    break;
-                case BOOL:
-                    convertedList.add(Boolean.parseBoolean(s));
-                    break;
-                case STRING:
-                    convertedList.add(s.substring(1, s.length() - 1));
-                    break;
-                case EMPTY:
-                    convertedList.add(null);
-                    break;
-                default:
-                    convertedList.add(s);
+            if (type != null && !type.equals(parseStringType(s))) {
+                if ((type == Integer.class && parseStringType(s).equals(Long.class)) || (type == Long.class && parseStringType(s).equals(Integer.class))) {
+                    // if there's a mix between long and integer, the type is long
+                    type = Long.class;
+                    continue;
+                }
+                type = String.class;
+                break;
             }
+        }
+        List<T> convertedList = new ArrayList<>();
+        for (String s : list) {
+            Object value = parseValue(s, type);
+            convertedList.add((T) value);
         }
         return convertedList;
     }
 
-    public static stringParsedType parseStringType(String s) {
+    private static Object parseValue(String s, Class<?> type) {
+        if (s.isEmpty()) {
+            return null;
+        }
+        if (type == Integer.class) return Integer.parseInt(s);
+        if (type == Long.class) return Long.parseLong(s);
+        if (type == Double.class) return Double.parseDouble(s);
+        if (type == Boolean.class) return Boolean.parseBoolean(s);
+        if (type == String.class) return s;
+        return null;
+    }
+
+    public static Class<?> parseStringType(String s) {
         /**
-         * Parse a string into whether int, double, bool or string
+         * Parse a string to determine the most appropriate Java type.
          *
-         * @param s to parse
-         * @return corresponding string type
+         * @param s the string to parse
+         * @return Class<?> representing the detected type
          */
-        if (s == null || s.isEmpty()) {
-            return stringParsedType.EMPTY;
-        }
-        if (s.matches("^-?\\d+$")) {
-            return stringParsedType.INT;
-        }
-        if (s.matches("^-?\\d*\\.\\d+$")) {
-            return stringParsedType.DOUBLE;
-        }
+        s = s.trim();
+        try {
+            Integer.parseInt(s);
+            return Integer.class;
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            Long.parseLong(s);
+            return Long.class;
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            Double.parseDouble(s);
+            return Double.class;
+        } catch (NumberFormatException ignored) {}
+
         if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false")) {
-            return stringParsedType.BOOL;
+            return Boolean.class;
         }
-        if (s.matches("^\".*\"$") || s.matches("^'.*'$")) {
-            return stringParsedType.STRING;
-        }
-        return stringParsedType.UNKNOWN;
+        return String.class;
     }
 
     public static ArrayList<String> parseCSVRow(String row, char delimiter) {

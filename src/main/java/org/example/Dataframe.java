@@ -62,8 +62,6 @@ public class Dataframe {
             data_tab = new Serie[data_columns.length];
             for (int i = 0; i < data_columns.length; i++) {
                 data_tab[i] = new Serie<>(ConversionUtils.convertStringListToTypedList(data_columns[i].subList(1, data_columns[i].size())),data_columns[i].get(0));
-                System.out.println(data_tab[i].getData());
-
             }
         }
     }

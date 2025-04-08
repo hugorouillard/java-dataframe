@@ -20,8 +20,17 @@ public class StringToTypedConversionTest {
     }
 
     @Test
+    public void testConvertStringListToTypedList_Long() {
+        List<String> input = List.of("6545489", "451006565489", "851050656899");
+        List<?> result = ConversionUtils.convertStringListToTypedList(input);
+        assertTrue(result.get(0) instanceof Long);
+        assertTrue(result.get(1) instanceof Long);
+        assertTrue(result.get(2) instanceof Long);
+    }
+
+    @Test
     public void testConvertStringListToTypedList_Doubles() {
-        List<String> input = List.of("3.14", "2.718", "1.618");
+        List<String> input = List.of("3.14", "2.718", "15.2");
         List<?> result = ConversionUtils.convertStringListToTypedList(input);
 
         assertEquals(3, result.size());
@@ -45,14 +54,14 @@ public class StringToTypedConversionTest {
 
     @Test
     public void testConvertStringListToTypedList_Strings() {
-        List<String> input = List.of("\"hello\"", "\"world\"", "\"123\"");
+        List<String> input = List.of("hello", "true", "123");
         List<?> result = ConversionUtils.convertStringListToTypedList(input);
 
         assertEquals(3, result.size());
         assertTrue(result.get(0) instanceof String);
         assertEquals("hello", result.get(0));
         assertTrue(result.get(1) instanceof String);
-        assertEquals("world", result.get(1));
+        assertEquals("true", result.get(1));
         assertTrue(result.get(2) instanceof String);
         assertEquals("123", result.get(2));
     }
@@ -64,18 +73,5 @@ public class StringToTypedConversionTest {
 
         assertEquals(3, result.size());
         assertNull(result.get(0));
-    }
-
-    @Test
-    public void testConvertStringListToTypedList_MixedTypes() {
-        List<String> input = List.of("42", "3.14", "true", "\"text\"", "");
-        List<?> result = ConversionUtils.convertStringListToTypedList(input);
-
-        assertEquals(5, result.size());
-        assertTrue(result.get(0) instanceof Integer);
-        assertTrue(result.get(1) instanceof Double);
-        assertTrue(result.get(2) instanceof Boolean);
-        assertTrue(result.get(3) instanceof String);
-        assertNull(result.get(4));
     }
 }
