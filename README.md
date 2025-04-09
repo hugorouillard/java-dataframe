@@ -1,5 +1,8 @@
 # Java Data Analysis Library
 
+[![CI](https://github.com/hugorouillard/java-dataframe/actions/workflows/ci.yml/badge.svg)](https://github.com/hugorouillard/java-dataframe/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/hugorouillard/java-dataframe/graph/badge.svg?token=LAYFTJTRZQ)](https://codecov.io/gh/hugorouillard/java-dataframe)
+
 ## Overview
 
 This project aims to develop a Java library for manipulating tabular data, inspired by the Pandas library in Python.
