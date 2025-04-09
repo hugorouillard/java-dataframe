@@ -1,11 +1,21 @@
 package org.example;
 
-public class Main {
-    public static void main(String[] args) {
-        System.out.printf("Hello and welcome!");
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 
-        for (int i = 1; i <= 5; i++) {
-            System.out.println("i = " + i);
-        }
+public class Main {
+    public static void main(String[] args) throws IOException {
+        Path tempFile = Files.createTempFile("example", ".csv");
+        Files.write(tempFile, Arrays.asList(
+                "Name,Age,City",
+                "Alice,30,Paris",
+                "Bob,25,London",
+                "Charlie,35,New York"
+        ));
+
+        Dataframe df = new Dataframe(tempFile.toString(), ',');
+        System.out.println(df);
     }
 }
