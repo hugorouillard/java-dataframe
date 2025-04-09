@@ -10,7 +10,7 @@ import java.util.List;
  * Represents a dataframe structure containing multiple series of data.
  */
 public class Dataframe {
-    public Serie<?>[] data_tab;
+    private Series<?>[] data_tab;
 
     /**
      * Constructs a Dataframe from variable arguments where each argument represents a column of data.
@@ -19,10 +19,10 @@ public class Dataframe {
      * @throws IllegalArgumentException If any input series cannot be properly converted.
      */
     public Dataframe(Object ...input_series) {
-        data_tab = new Serie[input_series.length];
+        data_tab = new Series[input_series.length];
         for (int  i = 0; i < input_series.length; i++) {
             List<?> column_data_list = ConversionUtils.convertArrayToList(input_series[i]);
-            data_tab[i] = new Serie<>(column_data_list, String.valueOf(i));
+            data_tab[i] = new Series<>(column_data_list, String.valueOf(i));
         }
     }
 
@@ -59,11 +59,15 @@ public class Dataframe {
                     data_columns[i].add(values.get(i));
                 }
             }
-            data_tab = new Serie[data_columns.length];
+            data_tab = new Series[data_columns.length];
             for (int i = 0; i < data_columns.length; i++) {
-                data_tab[i] = new Serie<>(ConversionUtils.convertStringListToTypedList(data_columns[i].subList(1, data_columns[i].size())),data_columns[i].get(0));
+                data_tab[i] = new Series<>(ConversionUtils.convertStringListToTypedList(data_columns[i].subList(1, data_columns[i].size())),data_columns[i].get(0));
             }
         }
+    }
+
+    public Series<?>[] getDataTab() {
+        return data_tab;
     }
 
     @Override
@@ -106,7 +110,7 @@ public class Dataframe {
         }
 
         int maxRows = 0;
-        for (Serie<?> serie : data_tab) {
+        for (Series<?> serie : data_tab) {
             maxRows = Math.max(maxRows, serie.getData().size());
         }
 

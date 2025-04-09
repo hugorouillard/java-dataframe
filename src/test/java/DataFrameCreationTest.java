@@ -43,22 +43,22 @@ public class DataFrameCreationTest {
                 new String[]{"Paris", "London", "New York"}
         );
         assertNotNull(df);
-        assertEquals(3, df.data_tab.length);
-        assertEquals("0", df.data_tab[0].getName());
-        assertEquals("Alice", df.data_tab[0].getData().get(0));
-        assertEquals(25, df.data_tab[1].getData().get(1));
-        assertEquals("New York", df.data_tab[2].getData().get(2));
+        assertEquals(3, df.getDataTab().length);
+        assertEquals("0", df.getDataTab()[0].getName());
+        assertEquals("Alice", df.getDataTab()[0].getData().get(0));
+        assertEquals(25, df.getDataTab()[1].getData().get(1));
+        assertEquals("New York", df.getDataTab()[2].getData().get(2));
     }
 
     @Test
     public void testConstructorWithCSV() throws IOException {
         df = new Dataframe(tempFile.toString(), ',');
         assertNotNull(df);
-        assertEquals(3, df.data_tab.length);
-        assertEquals("Name", df.data_tab[0].getName());
-        assertEquals("Alice", df.data_tab[0].getData().get(0));
-        assertEquals(25, df.data_tab[1].getData().get(1));
-        assertEquals("New York", df.data_tab[2].getData().get(2));
+        assertEquals(3, df.getDataTab().length);
+        assertEquals("Name", df.getDataTab()[0].getName());
+        assertEquals("Alice", df.getDataTab()[0].getData().get(0));
+        assertEquals(25, df.getDataTab()[1].getData().get(1));
+        assertEquals("New York", df.getDataTab()[2].getData().get(2));
     }
 
     @Test(expected = IOException.class)

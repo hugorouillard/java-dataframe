@@ -44,7 +44,6 @@ public class ConversionUtils {
         } else if (array instanceof Object[]) {
             return Arrays.asList((Object[]) array);
         }
-
         throw new IllegalArgumentException("Unsuported array type : " + array.getClass().getSimpleName());
     }
 

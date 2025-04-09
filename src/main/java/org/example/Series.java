@@ -1,11 +1,11 @@
 package org.example;
 import java.util.List;
 
-public class Serie<V> {
+public class Series<V> {
     List<V> data;
     String name;
 
-    public Serie(List<V> data, String name) {
+    public Series(List<V> data, String name) {
         this.data = data;
         this.name = name;
     }
