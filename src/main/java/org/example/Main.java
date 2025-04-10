@@ -16,6 +16,13 @@ public class Main {
         ));
 
         Dataframe df = new Dataframe(tempFile.toString(), ',');
+        df.displayLastLines(2);
+
+        String[] labels = {"A", "B"};
+        Integer[] col1 = {1, 2, 3, 4, 5};
+        String[] col2 = {"a", "b", "c", "d", "e"};
+        df = new Dataframe(labels, col1, col2);
+        df.displayLastLines(2);
         System.out.println(df);
     }
 }

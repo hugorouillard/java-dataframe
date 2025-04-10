@@ -71,9 +71,9 @@ TODO
 - [X] Working CI pipeline with tests and coverage
 
 ### Library Features
-- [ ] Implementation of `Series` and `DataFrame`
-- [ ] CSV file reading
-- [ ] Data display methods
+- [X] Implementation of `Series` and `DataFrame`
+- [X] CSV file reading
+- [X] Data display methods
 - [ ] Selection by index, label, and condition
 - [ ] Basic statistics and advanced operations
 

@@ -2,8 +2,8 @@ package org.example;
 import java.util.List;
 
 public class Series<V> {
-    List<V> data;
-    String name;
+    private List<V> data;
+    private String name;
 
     public Series(List<V> data, String name) {
         this.data = data;

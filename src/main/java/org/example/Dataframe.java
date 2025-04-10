@@ -14,15 +14,20 @@ public class Dataframe {
 
     /**
      * Constructs a Dataframe from variable arguments where each argument represents a column of data.
+     * Columns are labelled by the labels array.
      *
+     * @param labels array of string, corresponding to each column label
      * @param input_series Set of multiple array that will be used as column in the Dataframe
      * @throws IllegalArgumentException If any input series cannot be properly converted.
      */
-    public Dataframe(Object ...input_series) {
+    public Dataframe(String [] labels, Object ...input_series) {
         data_tab = new Series[input_series.length];
         for (int  i = 0; i < input_series.length; i++) {
             List<?> column_data_list = ConversionUtils.convertArrayToList(input_series[i]);
             data_tab[i] = new Series<>(column_data_list, String.valueOf(i));
+            if(i < labels.length) {
+                data_tab[i].setName(labels[i]);
+            }
         }
     }
 
@@ -64,6 +69,32 @@ public class Dataframe {
                 data_tab[i] = new Series<>(ConversionUtils.convertStringListToTypedList(data_columns[i].subList(1, data_columns[i].size())),data_columns[i].get(0));
             }
         }
+    }
+
+    public void displayFirstLines(int linesAmount) {
+        Object[] subArrays = new Object[data_tab.length];
+        for (int i = 0; i < data_tab.length; i++) {
+            Series<?> s = data_tab[i];
+            subArrays[i] = s.getData().subList(0, Math.min(linesAmount, s.getData().size())).toArray();
+        }
+        System.out.println(new Dataframe(getLabels(), subArrays));
+    }
+
+    public void displayLastLines(int linesAmount) {
+        Object[] subArrays = new Object[data_tab.length];
+        for (int i = 0; i < data_tab.length; i++) {
+            Series<?> s = data_tab[i];
+            subArrays[i] = s.getData().subList(Math.max(0, s.getData().size() - linesAmount), s.getData().size()).toArray();
+        }
+        System.out.println(new Dataframe(getLabels(), subArrays));
+    }
+
+    public String[] getLabels() {
+        String[] labels = new String[data_tab.length];
+        for (int i = 0; i < data_tab.length; i++) {
+            labels[i] = data_tab[i].getName();
+        }
+        return labels;
     }
 
     public Series<?>[] getDataTab() {
