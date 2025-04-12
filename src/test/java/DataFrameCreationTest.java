@@ -86,10 +86,18 @@ public class DataFrameCreationTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testArrayConstructorInvalidArgs() throws IOException {
-        new Dataframe(new String[]{"A", "B"},
+    public void testArrayConstructorInvalidArgs1() throws IOException {
+        new Dataframe(new String[]{"A", "B"}, // not enough labels for 3 columns
                 new float[]{1.25F, 1.2F, 15.5F},
                 new long[]{1524856122, 1235478915, 458932346},
+                new int[]{30, 25, 35});
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testArrayConstructorInvalidArgs2() throws IOException {
+        new Dataframe(new String[]{"A", "B", "C"},
+                new float[]{1.25F, 1.2F, 15.5F},
+                new long[]{1524856122, 1235478915}, // not the same size as the others arrays
                 new int[]{30, 25, 35});
     }
 

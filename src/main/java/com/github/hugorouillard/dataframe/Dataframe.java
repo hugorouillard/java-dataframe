@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.max;
+
 /**
  * Represents a dataframe structure containing multiple series of data.
  */
 public class Dataframe {
     private Series<?>[] data_tab;
-
     /**
      * Constructs a Dataframe from variable arguments where each argument represents a column of data.
      * Columns are labelled by the labels array.
@@ -29,6 +30,9 @@ public class Dataframe {
         for (int  i = 0; i < input_series.length; i++) {
             List<?> column_data_list = ConversionUtils.convertArrayToList(input_series[i]);
             data_tab[i] = new Series<>(column_data_list, String.valueOf(i));
+            if (i > 0 && data_tab[i - 1].getData().size() != data_tab[i].getData().size()) {
+                throw new IllegalArgumentException("Lists or arrays must be the same size");
+            }
             if (labels.length == input_series.length) {
                 data_tab[i].setName(labels[i]);
             }
@@ -88,7 +92,7 @@ public class Dataframe {
         Object[] subArrays = new Object[data_tab.length];
         for (int i = 0; i < data_tab.length; i++) {
             Series<?> s = data_tab[i];
-            subArrays[i] = s.getData().subList(Math.max(0, s.getData().size() - linesAmount), s.getData().size()).toArray();
+            subArrays[i] = s.getData().subList(max(0, s.getData().size() - linesAmount), s.getData().size()).toArray();
         }
         System.out.println(new Dataframe(getLabels(), subArrays));
     }
@@ -118,9 +122,9 @@ public class Dataframe {
             columnWidths[i] = data_tab[i].getName().length();
             for (Object value : data_tab[i].getData()) {
                 if (value == null) {
-                    columnWidths[i] = Math.max(columnWidths[i], 4);
+                    columnWidths[i] = max(columnWidths[i], 4);
                 } else {
-                    columnWidths[i] = Math.max(columnWidths[i], value.toString().length());
+                    columnWidths[i] = max(columnWidths[i], value.toString().length());
                 }
             }
             columnWidths[i] += 4;
@@ -146,7 +150,7 @@ public class Dataframe {
 
         int maxRows = 0;
         for (Series<?> serie : data_tab) {
-            maxRows = Math.max(maxRows, serie.getData().size());
+            maxRows = max(maxRows, serie.getData().size());
         }
 
         for (int i = 0; i < maxRows; i++) {
