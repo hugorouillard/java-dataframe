@@ -1,4 +1,4 @@
-package org.example;
+package com.github.hugorouillard.dataframe;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
