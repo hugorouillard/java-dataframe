@@ -36,8 +36,15 @@ public class ConversionUtils {
             return list;
         } else if (array instanceof float[]) {
             float[] arr = (float[]) array;
-            List<Float> list = new ArrayList<>(arr.length);
+            List<Double> list = new ArrayList<>(arr.length);
             for (float value : arr) {
+                list.add((double)value);
+            }
+            return list;
+        } else if (array instanceof long[]) {
+            long[] arr = (long[]) array;
+            List<Long> list = new ArrayList<>(arr.length);
+            for (long value : arr) {
                 list.add(value);
             }
             return list;
