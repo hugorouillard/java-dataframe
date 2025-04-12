@@ -16,16 +16,20 @@ public class Dataframe {
      * Constructs a Dataframe from variable arguments where each argument represents a column of data.
      * Columns are labelled by the labels array.
      *
-     * @param labels array of string, corresponding to each column label
+     * @param labels array of string, corresponding to each column label. If empty it uses default labels = 1,2,3...
      * @param input_series Set of multiple array that will be used as column in the Dataframe
-     * @throws IllegalArgumentException If any input series cannot be properly converted.
+     * @throws IllegalArgumentException if labels length does not correspond to the amount of series.
      */
     public Dataframe(String [] labels, Object ...input_series) {
         data_tab = new Series[input_series.length];
+        if (labels.length != input_series.length && labels.length != 0) {
+            throw new IllegalArgumentException("Input series and labels must have the same length or labels needs to be empty to use default labels");
+        }
+
         for (int  i = 0; i < input_series.length; i++) {
             List<?> column_data_list = ConversionUtils.convertArrayToList(input_series[i]);
             data_tab[i] = new Series<>(column_data_list, String.valueOf(i));
-            if(i < labels.length) {
+            if (labels.length == input_series.length) {
                 data_tab[i].setName(labels[i]);
             }
         }

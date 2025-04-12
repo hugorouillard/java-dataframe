@@ -39,7 +39,7 @@ public class DataFrameCreationTest {
     @Test
     public void testConstructorWithArrays1() {
         df = new Dataframe(
-                new String[]{"Nom", "Age"},
+                new String[]{"Nom", "Age", "Ville"}, // Specific labels
                 new String[]{"Alice", "Bob", "Charlie"},
                 new int[]{30, 25, 35},
                 new String[]{"Paris", "London", "New York"}
@@ -49,14 +49,14 @@ public class DataFrameCreationTest {
         assertEquals("Alice", df.getDataTab()[0].getData().get(0));
         assertEquals(25, df.getDataTab()[1].getData().get(1));
         assertEquals("New York", df.getDataTab()[2].getData().get(2));
-        assertEquals("2", df.getDataTab()[2].getName());
+        assertEquals("Ville", df.getDataTab()[2].getName());
         assertEquals("Age", df.getDataTab()[1].getName());
     }
 
     @Test
     public void testConstructorWithArrays2() {
         df = new Dataframe(
-                new String[]{},
+                new String[]{}, // Defaults labels
                 new float[]{1.25F, 1.2F, 15.5F},
                 new long[]{1524856122, 1235478915, 458932346},
                 new int[]{30, 25, 35},
@@ -83,6 +83,14 @@ public class DataFrameCreationTest {
         assertEquals("0", df.getDataTab()[0].getName());
         assertEquals("1", df.getDataTab()[1].getName());
         assertEquals("2", df.getDataTab()[2].getName());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testArrayConstructorInvalidArgs() throws IOException {
+        new Dataframe(new String[]{"A", "B"},
+                new float[]{1.25F, 1.2F, 15.5F},
+                new long[]{1524856122, 1235478915, 458932346},
+                new int[]{30, 25, 35});
     }
 
     @Test
