@@ -1,4 +1,4 @@
-import org.example.ConversionUtils;
+import com.github.hugorouillard.dataframe.ConversionUtils;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;

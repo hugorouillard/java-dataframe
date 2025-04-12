@@ -1,4 +1,4 @@
-package org.example;
+package com.github.hugorouillard.dataframe;
 
 import java.io.IOException;
 import java.nio.file.Files;
