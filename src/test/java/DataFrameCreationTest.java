@@ -1,4 +1,4 @@
-import org.example.Dataframe;
+import com.github.hugorouillard.dataframe.Dataframe;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

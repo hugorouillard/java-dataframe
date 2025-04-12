@@ -36,3 +36,22 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: codecov-coverage
+
+      - name: Publish to GitHub Packages
+        if: success() && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cat <<EOF > settings.xml
+          <settings>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>${{ github.actor }}</username>
+                <password>${env.GITHUB_TOKEN}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+          mvn deploy -s settings.xml
