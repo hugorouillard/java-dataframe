@@ -29,6 +29,12 @@ public class Series<V> {
         return sum / data.size();
     }
 
+    /**
+     * Return the median of the series, only works with numerical series (int, double, long...)
+     *
+     * @throws IllegalArgumentException if the series is not numerical.
+     * @return double median of the series
+     */
     public double median() {
         if (!isNumerical()) {
             throw new IllegalArgumentException("Series must contain numerical values");
@@ -47,6 +53,12 @@ public class Series<V> {
         }
     }
 
+    /**
+     * Return the median of the series, only works with numerical series (int, double, long...)
+     *
+     * @throws IllegalArgumentException if the series is not numerical.
+     * @return double median of the series
+     */
     public double std() {
         if (!isNumerical()) {
             throw new IllegalArgumentException("Series must contain numerical values");
@@ -60,32 +72,48 @@ public class Series<V> {
         return Math.sqrt(sumSquaredDiffs / data.size());
     }
 
-    public double min() {
+    /**
+     * Return the min of the series, only works with numerical series (int, double, long...)
+     *
+     * @throws IllegalArgumentException if the series is not numerical.
+     * @return V the minimum of the list
+     */
+    public V min() {
         if (!isNumerical()) {
             throw new IllegalArgumentException("Series must contain numerical values");
         }
-        double min = ((Number) data.get(0)).doubleValue();
+        double min_value = ((Number) data.get(0)).doubleValue();
+        V element = data.get(0);
         for (V value : data) {
             double val = ((Number) value).doubleValue();
-            if (val < min) {
-                min = val;
+            if (val < min_value) {
+                min_value = val;
+                element = value;
             }
         }
-        return min;
+        return element;
     }
 
-    public double max() {
+    /**
+     * Return the min of the series, only works with numerical series (int, double, long...)
+     *
+     * @throws IllegalArgumentException if the series is not numerical.
+     * @return V the maximum of the list
+     */
+    public V max() {
         if (!isNumerical()) {
             throw new IllegalArgumentException("Series must contain numerical values");
         }
-        double max = ((Number) data.get(0)).doubleValue();
+        double min_value = ((Number) data.get(0)).doubleValue();
+        V element = data.get(0);
         for (V value : data) {
             double val = ((Number) value).doubleValue();
-            if (val > max) {
-                max = val;
+            if (val > min_value) {
+                min_value = val;
+                element = value;
             }
         }
-        return max;
+        return element;
     }
 
     private boolean isNumerical() {
