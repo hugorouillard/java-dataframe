@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Series<V> {
-    private List<V> data;
+    private final List<V> data;
     private String name;
 
     public Series(List<V> data, String name) {
@@ -19,7 +19,7 @@ public class Series<V> {
      * @return double mean of the series
      */
     public double mean() {
-        if (!isNumerical()) {
+        if (notNumerical()) {
             throw new IllegalArgumentException("Series must contain numerical values");
         }
         double sum = 0;
@@ -36,7 +36,7 @@ public class Series<V> {
      * @return double median of the series
      */
     public double median() {
-        if (!isNumerical()) {
+        if (notNumerical()) {
             throw new IllegalArgumentException("Series must contain numerical values");
         }
 
@@ -60,7 +60,7 @@ public class Series<V> {
      * @return double median of the series
      */
     public double std() {
-        if (!isNumerical()) {
+        if (notNumerical()) {
             throw new IllegalArgumentException("Series must contain numerical values");
         }
         double mean = mean();
@@ -79,7 +79,7 @@ public class Series<V> {
      * @return V the minimum of the list
      */
     public V min() {
-        if (!isNumerical()) {
+        if (notNumerical()) {
             throw new IllegalArgumentException("Series must contain numerical values");
         }
         double min_value = ((Number) data.get(0)).doubleValue();
@@ -101,7 +101,7 @@ public class Series<V> {
      * @return V the maximum of the list
      */
     public V max() {
-        if (!isNumerical()) {
+        if (notNumerical()) {
             throw new IllegalArgumentException("Series must contain numerical values");
         }
         double min_value = ((Number) data.get(0)).doubleValue();
@@ -116,8 +116,8 @@ public class Series<V> {
         return element;
     }
 
-    private boolean isNumerical() {
-        return data.get(0) instanceof Number;
+    private boolean notNumerical() {
+        return !(data.get(0) instanceof Number);
     }
 
     public void setName(String name) {

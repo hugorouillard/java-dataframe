@@ -71,6 +71,11 @@ public class Dataframe {
                     data_columns[i].add(values.get(i));
                 }
             }
+
+            if (data_columns == null) {
+                throw new IllegalArgumentException("CSV file is empty");
+            }
+
             data_tab = new Series[data_columns.length];
             for (int i = 0; i < data_columns.length; i++) {
                 data_tab[i] = new Series<>(ConversionUtils.convertStringListToTypedList(data_columns[i].subList(1, data_columns[i].size())),data_columns[i].get(0));
@@ -251,8 +256,8 @@ public class Dataframe {
         }
 
         int maxRows = 0;
-        for (Series<?> serie : data_tab) {
-            maxRows = Math.max(maxRows, serie.getData().size());
+        for (Series<?> series : data_tab) {
+            maxRows = Math.max(maxRows, series.getData().size());
         }
 
         for (int i = 0; i < maxRows; i++) {
