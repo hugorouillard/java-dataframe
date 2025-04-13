@@ -120,10 +120,6 @@ public class Series<V> {
         return data.get(0) instanceof Number;
     }
 
-    public void setData(List<V> data) {
-        this.data = data;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
