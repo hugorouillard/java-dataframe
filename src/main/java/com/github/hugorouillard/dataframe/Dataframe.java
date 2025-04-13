@@ -6,13 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.max;
-
 /**
  * Represents a dataframe structure containing multiple series of data.
  */
 public class Dataframe {
-    private Series<?>[] data_tab;
+    private final Series<?>[] data_tab;
     /**
      * Constructs a Dataframe from variable arguments where each argument represents a column of data.
      * Columns are labelled by the labels array.
@@ -49,6 +47,7 @@ public class Dataframe {
      * @throws IOException If there's an error reading the file
      * @throws IllegalArgumentException If the CSV file is empty or improperly formatted
      */
+    @SuppressWarnings("unchecked")
     public Dataframe(String csv_file, char delimiter) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(csv_file))) {
             String line;
@@ -111,11 +110,9 @@ public class Dataframe {
 
     /**
      * Generates descriptive statistics for the dataframe.
-     * Similar to pandas describe() function, this method computes various statistics
-     * for each numerical column in the dataframe.
-     *
-     * @return A string representation of descriptive statistics in tabular format
+     * This method computes various statistics for each numerical column in the dataframe.
      */
+    @SuppressWarnings("unchecked")
     public void describe() {
         List<Series<?>> numericalSeries = new ArrayList<>();
         for (Series<?> series : data_tab) {
