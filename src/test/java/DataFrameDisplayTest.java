@@ -66,4 +66,15 @@ public class DataFrameDisplayTest {
         assertTrue(output.contains("A"));
         assertTrue(output.contains("B"));
     }
+
+    @Test
+    public void testSeriesDisplay() {
+        String output = df.getDataTab()[0].toString();
+        assertTrue(output.contains("A"));
+        assertTrue(output.contains("1"));
+        assertTrue(output.contains("2"));
+        assertTrue(output.contains("3"));
+        assertTrue(output.contains("4"));
+        assertTrue(output.contains("5"));
+    }
 }

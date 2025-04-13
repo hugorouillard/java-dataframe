@@ -92,7 +92,7 @@ public class Dataframe {
         Object[] subArrays = new Object[data_tab.length];
         for (int i = 0; i < data_tab.length; i++) {
             Series<?> s = data_tab[i];
-            subArrays[i] = s.getData().subList(max(0, s.getData().size() - linesAmount), s.getData().size()).toArray();
+            subArrays[i] = s.getData().subList(Math.max(0, s.getData().size() - linesAmount), s.getData().size()).toArray();
         }
         System.out.println(new Dataframe(getLabels(), subArrays));
     }
@@ -122,9 +122,9 @@ public class Dataframe {
             columnWidths[i] = data_tab[i].getName().length();
             for (Object value : data_tab[i].getData()) {
                 if (value == null) {
-                    columnWidths[i] = max(columnWidths[i], 4);
+                    columnWidths[i] = Math.max(columnWidths[i], 4);
                 } else {
-                    columnWidths[i] = max(columnWidths[i], value.toString().length());
+                    columnWidths[i] = Math.max(columnWidths[i], value.toString().length());
                 }
             }
             columnWidths[i] += 4;
@@ -150,7 +150,7 @@ public class Dataframe {
 
         int maxRows = 0;
         for (Series<?> serie : data_tab) {
-            maxRows = max(maxRows, serie.getData().size());
+            maxRows = Math.max(maxRows, serie.getData().size());
         }
 
         for (int i = 0; i < maxRows; i++) {
