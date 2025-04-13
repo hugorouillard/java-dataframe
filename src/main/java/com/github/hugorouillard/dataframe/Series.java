@@ -64,12 +64,12 @@ public class Series<V> {
             throw new IllegalArgumentException("Series must contain numerical values");
         }
         double mean = mean();
-        double sumSquaredDiffs = 0;
+        double sum_square_diff = 0;
         for (V value : data) {
             double val = ((Number) value).doubleValue();
-            sumSquaredDiffs += Math.pow(val - mean, 2);
+            sum_square_diff += Math.pow(val - mean, 2);
         }
-        return Math.sqrt(sumSquaredDiffs / data.size());
+        return Math.sqrt(sum_square_diff / data.size());
     }
 
     /**
@@ -117,7 +117,7 @@ public class Series<V> {
     }
 
     private boolean isNumerical() {
-        return data.get(0) instanceof Double || data.get(0) instanceof Float || data.get(0) instanceof Integer || data.get(0) instanceof Long;
+        return data.get(0) instanceof Number;
     }
 
     public void setData(List<V> data) {
@@ -134,6 +134,24 @@ public class Series<V> {
 
     public List<V> getData() {
         return this.data;
+    }
+
+    public void describe() {
+        double count = data.size();
+        double mean = mean();
+        double std_ = std();
+        V min = min();
+        V max = max();
+        double median = median();
+
+        System.out.println("count \t" + count);
+        System.out.println("mean \t" + mean);
+        System.out.println("median \t" + median);
+        System.out.println("std \t" + std_);
+        System.out.println("min \t" + min);
+        System.out.println("max \t" + max);
+
+        System.out.println("Name = " + getName() + ", type = " + data.get(0).getClass());
     }
 
     @Override

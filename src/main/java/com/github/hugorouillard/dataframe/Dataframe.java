@@ -109,6 +109,111 @@ public class Dataframe {
         return data_tab;
     }
 
+    /**
+     * Generates descriptive statistics for the dataframe.
+     * Similar to pandas describe() function, this method computes various statistics
+     * for each numerical column in the dataframe.
+     *
+     * @return A string representation of descriptive statistics in tabular format
+     */
+    public void describe() {
+        List<Series<?>> numericalSeries = new ArrayList<>();
+        for (Series<?> series : data_tab) {
+            if (!series.getData().isEmpty() && series.getData().get(0) instanceof Number) {
+                numericalSeries.add(series);
+            }
+        }
+
+        if (numericalSeries.isEmpty()) {
+            System.out.println("No numerical columns to describe");
+            return;
+        }
+
+        String[] stats = {"count", "mean", "std", "median", "min", "max"};
+        StringBuilder sb = new StringBuilder();
+
+        int[] columnWidths = new int[numericalSeries.size()];
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            columnWidths[i] = numericalSeries.get(i).getName().length();
+
+            double count = numericalSeries.get(i).getData().size();
+            double mean = numericalSeries.get(i).mean();
+            double std = numericalSeries.get(i).std();
+            double median = numericalSeries.get(i).median();
+            Object min = ((Series<? extends Number>) numericalSeries.get(i)).min();
+            Object max = ((Series<? extends Number>) numericalSeries.get(i)).max();
+
+            columnWidths[i] = Math.max(columnWidths[i], String.valueOf(count).length());
+            columnWidths[i] = Math.max(columnWidths[i], String.format("%.6f", mean).trim().length());
+            columnWidths[i] = Math.max(columnWidths[i], String.format("%.6f", std).trim().length());
+            columnWidths[i] = Math.max(columnWidths[i], min.toString().length());
+            columnWidths[i] = Math.max(columnWidths[i], String.format("%.6f", median).trim().length());
+            columnWidths[i] = Math.max(columnWidths[i], max.toString().length());
+
+            columnWidths[i] += 4;
+        }
+
+        int statsWidth = 8;
+
+        sb.append(" ".repeat(statsWidth + 1)).append("╔");
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            sb.append("═".repeat(columnWidths[i])).append(i == numericalSeries.size() - 1 ? "╗\n" : "╦");
+        }
+
+        sb.append(" ".repeat(statsWidth + 1)).append("║");
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            sb.append(String.format(" %-" + (columnWidths[i] - 2) + "s ║", numericalSeries.get(i).getName()));
+        }
+        sb.append("\n");
+
+        sb.append("╔").append("═".repeat(statsWidth)).append("╬");
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            sb.append("═".repeat(columnWidths[i])).append(i == numericalSeries.size() - 1 ? "╣\n" : "╬");
+        }
+
+        for (String stat : stats) {
+            sb.append(String.format("║ %-6s ║", stat));
+
+            for (int i = 0; i < numericalSeries.size(); i++) {
+                Series<? extends Number> series = (Series<? extends Number>) numericalSeries.get(i);
+                String value;
+
+                switch (stat) {
+                    case "count":
+                        value = String.valueOf(series.getData().size());
+                        break;
+                    case "mean":
+                        value = String.format("%.6f", series.mean()).trim();
+                        break;
+                    case "std":
+                        value = String.format("%.6f", series.std()).trim();
+                        break;
+                    case "min":
+                        value = series.min().toString();
+                        break;
+                    case "median":
+                        value = String.format("%.6f", series.median()).trim();
+                        break;
+                    case "max":
+                        value = series.max().toString();
+                        break;
+                    default:
+                        value = "N/A";
+                }
+
+                sb.append(String.format(" %-" + (columnWidths[i] - 2) + "s ║", value));
+            }
+            sb.append("\n");
+        }
+
+        sb.append("╚").append("═".repeat(statsWidth)).append("╩");
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            sb.append("═".repeat(columnWidths[i])).append(i == numericalSeries.size() - 1 ? "╝\n" : "╩");
+        }
+
+        System.out.println(sb);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
