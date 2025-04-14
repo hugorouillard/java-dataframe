@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Represents a dataframe structure containing multiple series of data.
@@ -105,18 +106,54 @@ public class Dataframe {
         return data_tab;
     }
 
+    /**
+     * Returns a new Dataframe containing only the specified rows (by index).
+     * Mimics Pandas' df.iloc[[i1, i2, ...]].
+     *
+     * @param indices the exact row indices to include
+     * @return a new Dataframe with those rows
+     * @throws IllegalArgumentException if any index is out of bounds
+     */
+    public Dataframe selectRows(int... indices) {
+        int rowCount = data_tab[0].getData().size();
+        Object[] newData = new Object[data_tab.length];
+
+        for (int col = 0; col < data_tab.length; col++) {
+            List<?> originalCol = data_tab[col].getData();
+            List<Object> selectedCol = new ArrayList<>();
+
+            for (int idx : indices) {
+                if (idx < 0 || idx >= rowCount) {
+                    throw new IllegalArgumentException("Row index out of bounds: " + idx);
+                }
+                selectedCol.add(originalCol.get(idx));
+            }
+
+            newData[col] = selectedCol.toArray();
+        }
+
+        return new Dataframe(getLabels(), newData);
+    }
+
+    /**
+     * Returns a new Dataframe containing rows in the range [from, to).
+     * Mimics Pandas' df.iloc[from:to].
+     *
+     * @param from the start index (inclusive)
+     * @param to the end index (exclusive)
+     * @return a new Dataframe with selected rows
+     */
     public Dataframe selectRows(int from, int to) {
         if (from < 0 || to > data_tab[0].getData().size() || from >= to) {
             throw new IllegalArgumentException("Invalid row range");
         }
 
-        Object[] newData = new Object[data_tab.length];
-        for (int i = 0; i < data_tab.length; i++) {
-            List<?> columnData = data_tab[i].getData().subList(from, to);
-            newData[i] = columnData.toArray();
+        int[] indices = new int[to - from];
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = from + i;
         }
 
-        return new Dataframe(getLabels(), newData);
+        return selectRows(indices);
     }
 
     public Dataframe selectColumn (String... labels) {
