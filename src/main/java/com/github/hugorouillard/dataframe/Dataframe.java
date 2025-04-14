@@ -105,6 +105,47 @@ public class Dataframe {
         return data_tab;
     }
 
+    public Dataframe selectRows(int from, int to) {
+        if (from < 0 || to > data_tab[0].getData().size() || from >= to) {
+            throw new IllegalArgumentException("Invalid row range");
+        }
+
+        Object[] newData = new Object[data_tab.length];
+        for (int i = 0; i < data_tab.length; i++) {
+            List<?> columnData = data_tab[i].getData().subList(from, to);
+            newData[i] = columnData.toArray();
+        }
+
+        return new Dataframe(getLabels(), newData);
+    }
+
+    public Dataframe selectColumn (String... labels) {
+        List<Series<?>> selectedSeries = new ArrayList<>();
+        List<String> selectedLabels = new ArrayList<>();
+
+        for (String label : labels) {
+            boolean found = false;
+            for (Series<?> series : data_tab) {
+                if (series.getName().equals(label)) {
+                    selectedSeries.add(series);
+                    selectedLabels.add(label);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new IllegalArgumentException("Column not found: " + label);
+            }
+        }
+
+        Object[] newData = new Object[selectedSeries.size()];
+        for (int i = 0; i < selectedSeries.size(); i++) {
+            newData[i] = selectedSeries.get(i).getData().toArray();
+        }
+
+        return new Dataframe(selectedLabels.toArray(new String[0]), newData);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
