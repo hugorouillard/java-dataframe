@@ -77,4 +77,26 @@ public class DataFrameDisplayTest {
         assertTrue(output.contains("4"));
         assertTrue(output.contains("5"));
     }
+
+    @Test
+    public void testDescribeDisplaySeries() {
+        df.getDataTab()[0].describe();
+        String output = outContent.toString();
+
+        assertTrue(output.contains("5")); // count / max
+        assertTrue(output.contains("3.0")); // mean
+        assertTrue(output.contains("1.41")); // std
+        assertTrue(output.contains("1")); // min
+    }
+
+    @Test
+    public void testDescribeDisplayDataframe() {
+        df.describe();
+        String output = outContent.toString();
+        assertTrue(output.contains("A"));
+        assertTrue(output.contains("5")); // count / max
+        assertTrue(output.contains("3,00")); // mean
+        assertTrue(output.contains("1,41")); // std
+        assertTrue(output.contains("1")); // min
+    }
 }

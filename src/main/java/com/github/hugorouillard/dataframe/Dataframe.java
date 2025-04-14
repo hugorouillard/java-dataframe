@@ -146,10 +146,10 @@ public class Dataframe {
             Object max = ((Series<? extends Number>) numericalSeries.get(i)).max();
 
             columnWidths[i] = Math.max(columnWidths[i], String.valueOf(count).length());
-            columnWidths[i] = Math.max(columnWidths[i], String.format("%.6f", mean).trim().length());
-            columnWidths[i] = Math.max(columnWidths[i], String.format("%.6f", std).trim().length());
+            columnWidths[i] = Math.max(columnWidths[i], String.valueOf(mean).trim().length());
+            columnWidths[i] = Math.max(columnWidths[i], String.valueOf(std).trim().length());
             columnWidths[i] = Math.max(columnWidths[i], min.toString().length());
-            columnWidths[i] = Math.max(columnWidths[i], String.format("%.6f", median).trim().length());
+            columnWidths[i] = Math.max(columnWidths[i], String.valueOf(median).trim().length());
             columnWidths[i] = Math.max(columnWidths[i], max.toString().length());
 
             columnWidths[i] += 4;
