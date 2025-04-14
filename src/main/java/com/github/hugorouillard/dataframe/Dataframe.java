@@ -143,7 +143,7 @@ public class Dataframe {
      * @param to the end index (exclusive)
      * @return a new Dataframe with selected rows
      */
-    public Dataframe selectRows(int from, int to) {
+    public Dataframe selectRowsRange(int from, int to) {
         if (from < 0 || to > data_tab[0].getData().size() || from >= to) {
             throw new IllegalArgumentException("Invalid row range");
         }
@@ -156,7 +156,7 @@ public class Dataframe {
         return selectRows(indices);
     }
 
-    public Dataframe selectColumn (String... labels) {
+    public Dataframe selectColumns (String... labels) {
         List<Series<?>> selectedSeries = new ArrayList<>();
         List<String> selectedLabels = new ArrayList<>();
 
