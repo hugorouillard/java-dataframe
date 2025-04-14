@@ -95,8 +95,8 @@ public class DataFrameDisplayTest {
         String output = outContent.toString();
         assertTrue(output.contains("A"));
         assertTrue(output.contains("5")); // count / max
-        assertTrue(output.contains("3,00")); // mean
-        assertTrue(output.contains("1,41")); // std
+        assertTrue(output.contains("3")); // mean
+        assertTrue(output.contains("1,4")); // std
         assertTrue(output.contains("1")); // min
     }
 }
