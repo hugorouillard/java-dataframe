@@ -183,6 +183,53 @@ public class Dataframe {
         return new Dataframe(selectedLabels.toArray(new String[0]), newData);
     }
 
+    /**
+     * Returns a new Dataframe containing only the rows for which the given predicate evaluates to true,
+     * based on the values in a specified column.
+     * <p>
+     * This method provides a flexible way to perform advanced filtering, similar to Pandas' conditional selection
+     * (e.g., {@code df[df["col"] > 10]}). The user is responsible for ensuring that the predicate correctly handles
+     * the type of the column's values.
+     * <p>
+     * Example usage:
+     * <pre>{@code
+     *     Dataframe df = ...;
+     *     Dataframe filtered = df.filterRows("Age", value -> ((Integer) value) > 30);
+     * }</pre>
+     *
+     * @param columnLabel The label of the column to use for filtering.
+     * @param condition   A predicate that takes a column value and returns true if the corresponding row should be kept.
+     * @return A new Dataframe containing only the rows where the condition is true.
+     * @throws IllegalArgumentException if the specified column does not exist.
+     */
+    public Dataframe filterRows(String columnLabel, Predicate<Object> condition) {
+        int colIndex = -1;
+        for (int i = 0; i < data_tab.length; i++) {
+            if (data_tab[i].getName().equals(columnLabel)) {
+                colIndex = i;
+                break;
+            }
+        }
+
+        if (colIndex == -1) {
+            throw new IllegalArgumentException("Column not found: " + columnLabel);
+        }
+
+        List<?> targetColumn = data_tab[colIndex].getData();
+        List<Integer> matchingIndices = new ArrayList<>();
+
+        for (int i = 0; i < targetColumn.size(); i++) {
+            Object value = targetColumn.get(i);
+            if (condition.test(value)) {
+                matchingIndices.add(i);
+            }
+        }
+
+        // convert List<Integer> to int[] for selectRows
+        int[] indices = matchingIndices.stream().mapToInt(Integer::intValue).toArray();
+        return selectRows(indices);
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
