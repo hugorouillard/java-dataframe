@@ -132,6 +132,12 @@ public class Series<V> {
         return this.data;
     }
 
+    /**
+     * Generates descriptive statistics for the series.
+     * This method computes various statistics for numerical series.
+     *
+     * @throws IllegalArgumentException if the series is not numerical.
+     */
     public void describe() {
         double count = data.size();
         double mean = mean();
