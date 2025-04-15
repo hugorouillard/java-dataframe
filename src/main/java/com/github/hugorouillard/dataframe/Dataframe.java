@@ -10,8 +10,7 @@ import java.util.List;
  * Represents a dataframe structure containing multiple series of data.
  */
 public class Dataframe {
-    private Series<?>[] data_tab;
-
+    private final Series<?>[] data_tab;
     /**
      * Constructs a Dataframe from variable arguments where each argument represents a column of data.
      * Columns are labelled by the labels array.
@@ -29,6 +28,9 @@ public class Dataframe {
         for (int  i = 0; i < input_series.length; i++) {
             List<?> column_data_list = ConversionUtils.convertArrayToList(input_series[i]);
             data_tab[i] = new Series<>(column_data_list, String.valueOf(i));
+            if (i > 0 && data_tab[i - 1].getData().size() != data_tab[i].getData().size()) {
+                throw new IllegalArgumentException("Lists or arrays must be the same size");
+            }
             if (labels.length == input_series.length) {
                 data_tab[i].setName(labels[i]);
             }
@@ -45,6 +47,7 @@ public class Dataframe {
      * @throws IOException If there's an error reading the file
      * @throws IllegalArgumentException If the CSV file is empty or improperly formatted
      */
+    @SuppressWarnings("unchecked")
     public Dataframe(String csv_file, char delimiter) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(csv_file))) {
             String line;
@@ -68,6 +71,11 @@ public class Dataframe {
                     data_columns[i].add(values.get(i));
                 }
             }
+
+            if (data_columns == null) {
+                throw new IllegalArgumentException("CSV file is empty");
+            }
+
             data_tab = new Series[data_columns.length];
             for (int i = 0; i < data_columns.length; i++) {
                 data_tab[i] = new Series<>(ConversionUtils.convertStringListToTypedList(data_columns[i].subList(1, data_columns[i].size())),data_columns[i].get(0));
@@ -103,6 +111,109 @@ public class Dataframe {
 
     public Series<?>[] getDataTab() {
         return data_tab;
+    }
+
+    /**
+     * Generates descriptive statistics for the dataframe.
+     * This method computes various statistics for each numerical column in the dataframe.
+     */
+    @SuppressWarnings("unchecked")
+    public void describe() {
+        List<Series<?>> numericalSeries = new ArrayList<>();
+        for (Series<?> series : data_tab) {
+            if (!series.getData().isEmpty() && series.getData().get(0) instanceof Number) {
+                numericalSeries.add(series);
+            }
+        }
+
+        if (numericalSeries.isEmpty()) {
+            System.out.println("No numerical columns to describe");
+            return;
+        }
+
+        String[] stats = {"count", "mean", "std", "median", "min", "max"};
+        StringBuilder sb = new StringBuilder();
+
+        int[] columnWidths = new int[numericalSeries.size()];
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            columnWidths[i] = numericalSeries.get(i).getName().length();
+
+            double count = numericalSeries.get(i).getData().size();
+            double mean = numericalSeries.get(i).mean();
+            double std = numericalSeries.get(i).std();
+            double median = numericalSeries.get(i).median();
+            Object min = ((Series<? extends Number>) numericalSeries.get(i)).min();
+            Object max = ((Series<? extends Number>) numericalSeries.get(i)).max();
+
+            columnWidths[i] = Math.max(columnWidths[i], String.valueOf(count).length());
+            columnWidths[i] = Math.max(columnWidths[i], String.valueOf(mean).trim().length());
+            columnWidths[i] = Math.max(columnWidths[i], String.valueOf(std).trim().length());
+            columnWidths[i] = Math.max(columnWidths[i], min.toString().length());
+            columnWidths[i] = Math.max(columnWidths[i], String.valueOf(median).trim().length());
+            columnWidths[i] = Math.max(columnWidths[i], max.toString().length());
+
+            columnWidths[i] += 4;
+        }
+
+        int statsWidth = 8;
+
+        sb.append(" ".repeat(statsWidth + 1)).append("╔");
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            sb.append("═".repeat(columnWidths[i])).append(i == numericalSeries.size() - 1 ? "╗\n" : "╦");
+        }
+
+        sb.append(" ".repeat(statsWidth + 1)).append("║");
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            sb.append(String.format(" %-" + (columnWidths[i] - 2) + "s ║", numericalSeries.get(i).getName()));
+        }
+        sb.append("\n");
+
+        sb.append("╔").append("═".repeat(statsWidth)).append("╬");
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            sb.append("═".repeat(columnWidths[i])).append(i == numericalSeries.size() - 1 ? "╣\n" : "╬");
+        }
+
+        for (String stat : stats) {
+            sb.append(String.format("║ %-6s ║", stat));
+
+            for (int i = 0; i < numericalSeries.size(); i++) {
+                Series<? extends Number> series = (Series<? extends Number>) numericalSeries.get(i);
+                String value;
+
+                switch (stat) {
+                    case "count":
+                        value = String.valueOf(series.getData().size());
+                        break;
+                    case "mean":
+                        value = String.format("%.6f", series.mean()).trim();
+                        break;
+                    case "std":
+                        value = String.format("%.6f", series.std()).trim();
+                        break;
+                    case "min":
+                        value = series.min().toString();
+                        break;
+                    case "median":
+                        value = String.format("%.6f", series.median()).trim();
+                        break;
+                    case "max":
+                        value = series.max().toString();
+                        break;
+                    default:
+                        value = "N/A";
+                }
+
+                sb.append(String.format(" %-" + (columnWidths[i] - 2) + "s ║", value));
+            }
+            sb.append("\n");
+        }
+
+        sb.append("╚").append("═".repeat(statsWidth)).append("╩");
+        for (int i = 0; i < numericalSeries.size(); i++) {
+            sb.append("═".repeat(columnWidths[i])).append(i == numericalSeries.size() - 1 ? "╝\n" : "╩");
+        }
+
+        System.out.println(sb);
     }
 
     @Override
@@ -145,8 +256,8 @@ public class Dataframe {
         }
 
         int maxRows = 0;
-        for (Series<?> serie : data_tab) {
-            maxRows = Math.max(maxRows, serie.getData().size());
+        for (Series<?> series : data_tab) {
+            maxRows = Math.max(maxRows, series.getData().size());
         }
 
         for (int i = 0; i < maxRows; i++) {
