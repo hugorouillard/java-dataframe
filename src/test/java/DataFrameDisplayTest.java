@@ -96,7 +96,7 @@ public class DataFrameDisplayTest {
         assertTrue(output.contains("A"));
         assertTrue(output.contains("5")); // count / max
         assertTrue(output.contains("3")); // mean
-        assertTrue(output.contains("1,4")); // std
+        assertTrue(output.contains("1.4")); // std
         assertTrue(output.contains("1")); // min
     }
 }
