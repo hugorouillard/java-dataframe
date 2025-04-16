@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/hugorouillard/java-dataframe/graph/badge.svg?token=LAYFTJTRZQ)](https://codecov.io/gh/hugorouillard/java-dataframe)
 [![Javadoc](https://img.shields.io/badge/docs-javadoc-blue)](https://hugorouillard.github.io/java-dataframe/)
 [![License](https://img.shields.io/github/license/hugorouillard/java-dataframe)](https://github.com/hugorouillard/java-dataframe/blob/main/LICENSE)
+[![Docker Hub](https://img.shields.io/docker/pulls/hugorouillard/java-dataframe-demo?label=Docker%20Hub)](https://hub.docker.com/r/hugorouillard/java-dataframe-demo)
 
 
 ## Overview
@@ -65,7 +66,22 @@ Status badges are displayed in the repository header:
 
 ## Docker
 
-TODO 
+A Docker image is automatically built and published to [Docker Hub](https://hub.docker.com/r/hugorouillard/java-dataframe-demo) via GitHub Actions.
+
+It contains a demonstration scenario using real League of Legends champion statistics.
+
+### Build Locally
+
+```bash
+docker build -t java-dataframe-demo .
+docker run --rm java-dataframe-demo
+```
+
+### Or pull from Docker Hub
+```
+docker pull hugorouillard/java-dataframe-demo
+docker run --rm hugorouillard/java-dataframe-demo
+```
 
 ## Project Checklist
 
@@ -83,5 +99,5 @@ TODO
 ### Deployment & Publishing
 - [X] Maven package publishing
 - [X] Javadoc publishing to GitHub Pages
-- [ ] Docker image with demonstration scenario
+- [X] Docker image with demonstration scenario (published to Docker Hub)
 - [ ] Cloud deployment via Terraform and Ansible
