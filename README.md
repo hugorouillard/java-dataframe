@@ -9,60 +9,63 @@
 
 ## Overview
 
-This project aims to develop a Java library for manipulating tabular data, inspired by the Pandas library in Python.
+This project aims to develop a Java library for manipulating tabular data, inspired by the [Pandas](https://pandas.pydata.org/) library in Python.
 
-It is developed as part of a university course, with a strong emphasis on DevOps practices: continuous integration, test coverage, automated delivery, containerization, cloud deployment, and integrated documentation.
+It was developed as part of a university DevOps project (UFR IM2AG, M1 INFO), with a focus on software engineering best practices: testing, code quality, collaboration workflows, automation, delivery pipelines, and documentation.
+More details about the course here: [https://tropars.github.io/teaching/#devops](https://tropars.github.io/teaching/#devops)
 
 ## Features
 
-- DataFrame creation:
-  - from structured column data
-  - from CSV files
-- Display:
-  - full dataset
-  - partial views (`head`, `tail`)
-- Selection:
-  - rows by index
-  - columns by label
-  - conditional filtering
-- Basic statistics: mean, min, max, etc.
-- Data sorting
-- Grouping and aggregation (`groupBy` + `aggregate`)
-- Demonstration scenario runnable in Docker
+- **DataFrame creation**
+  - From typed arrays or lists
+  - From CSV files (automatic type inference based on first line)
+
+- **Data display**
+  - Full display (`toString`)
+  - Head display (`displayFirstLines`)
+  - Tail display (`displayLastLines`)
+
+- **Selection mechanisms**
+  - Select rows by index (`selectRows`)
+  - Select row ranges (`selectRowsRange`)
+  - Select columns by label (`selectColumns`)
+  - Conditional filtering with predicates (`filterRows`)
+
+- **Statistics**
+  - Mean, Median, Std, Min, Max for numerical columns (`describe` method)
 
 ## Tech Stack
 
-| Domain           | Tool                              |
-|------------------|-----------------------------------|
-| Language         | Java                              |
-| Build            | Maven                             |
-| Testing          | JUnit                             |
-| Code Coverage    | JaCoCo                            |
-| Version Control  | Git (GitHub)                      |
-| CI/CD            | GitHub Actions                    |
-| Containerization | Docker                            |
-| Cloud Deployment | Google Cloud (Terraform, Ansible) |
+| Domain             | Tool                   |
+|--------------------|------------------------|
+| Language           | Java 11                |
+| Build              | Maven                  |
+| Testing            | JUnit                  |
+| Code Coverage      | JaCoCo                 |
+| Coverage Reporting | Codecov                |
+| Version Control    | Git (GitHub)           |
+| CI/CD              | GitHub Actions         |
+| Containerization   | Docker                 |
+| Image Hosting      | Docker Hub             |
+| Docs Deployment    | GitHub Pages (Javadoc) |
 
 ## Git Workflow
 
-We follow a feature branch workflow:
-- **Feature Branches:** develop new features or fixes in separate branches.
-- **Pull/Merge Requests:** merge changes into the main branch via pull/merge requests.
-- **Code Reviews:** each request is reviewed before merging.
-- **CI/CD:** automated tests and quality checks run on every request.
+We used a strict Git feature branch workflow:
+- All contributions are made through **feature branches**
+- Each branch is integrated via **Pull Requests**
+- Reviews are mandatory for merging
+- The CI pipeline runs on every PR to validate build and tests
 
-## Continuous Integration
+## Continuous Integration / Delivery
 
-The CI is configured to:
-- build the project
-- run all tests
-- generate code coverage reports
-- publish the library and Docker image on success
-
-Status badges are displayed in the repository header:
-- CI build status
-- test coverage
-- published version
+Our GitHub Actions pipeline performs:
+- Build and unit tests (`mvn verify`)
+- Coverage report generation with JaCoCo
+- Upload and analysis of test coverage with [Codecov](https://codecov.io/gh/hugorouillard/java-dataframe)
+- Javadoc generation and publishing to [GitHub Pages](https://hugorouillard.github.io/java-dataframe/)
+- Maven package publishing
+- Docker image publishing and deployment to [Docker Hub](https://hub.docker.com/r/hugorouillard/java-dataframe-demo), including a demonstration scenario
 
 ## Docker
 
@@ -83,21 +86,15 @@ docker pull hugorouillard/java-dataframe-demo
 docker run --rm hugorouillard/java-dataframe-demo
 ```
 
-## Project Checklist
+## Feedback
 
-### Development Environment
-- [X] Environment setup (Maven, JUnit, JaCoCo)
-- [X] Working CI pipeline with tests and coverage
+This project allowed us to:
+- Practice CI/CD automation in a real setting
+- Understand Maven project structure and plugins
+- Learn Docker, especially for demonstration and delivery
+- Gain confidence in collaboration workflows (PRs, reviews)
+- Appreciate the value of documentation (Javadoc, CI badges)
 
-### Library Features
-- [X] Implementation of `Series` and `DataFrame`
-- [X] CSV file reading
-- [X] Data display methods
-- [X] Selection by index, label, and condition
-- [X] Basic statistics and advanced operations
-
-### Deployment & Publishing
-- [X] Maven package publishing
-- [X] Javadoc publishing to GitHub Pages
-- [X] Docker image with demonstration scenario (published to Docker Hub)
-- [ ] Cloud deployment via Terraform and Ansible
+Challenges we faced:
+- Debugging GitHub Actions and Docker publishing flows
+- Picking tools, especially for CI/CD because there are so many available options.
