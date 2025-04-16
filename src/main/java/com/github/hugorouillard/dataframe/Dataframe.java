@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Represents a dataframe structure containing multiple series of data.
@@ -111,6 +112,140 @@ public class Dataframe {
 
     public Series<?>[] getDataTab() {
         return data_tab;
+    }
+
+    /**
+     * Returns a new Dataframe containing only the specified rows (by index).
+     * Mimics Pandas' df.iloc[[i1, i2, ...]].
+     *
+     * @param indices the exact row indices to include
+     * @return a new Dataframe with those rows
+     * @throws IllegalArgumentException if any index is out of bounds
+     */
+    public Dataframe selectRows(int... indices) {
+        int rowCount = data_tab[0].getData().size();
+        Object[] newData = new Object[data_tab.length];
+
+        for (int col = 0; col < data_tab.length; col++) {
+            List<?> originalCol = data_tab[col].getData();
+            List<Object> selectedCol = new ArrayList<>();
+
+            for (int idx : indices) {
+                if (idx < 0 || idx >= rowCount) {
+                    throw new IllegalArgumentException("Row index out of bounds: " + idx);
+                }
+                selectedCol.add(originalCol.get(idx));
+            }
+
+            newData[col] = selectedCol.toArray();
+        }
+
+        return new Dataframe(getLabels(), newData);
+    }
+
+
+    /**
+    * Returns a new Dataframe containing only the specified rows (by range).
+    * Mimics Pandas' df.iloc[from:to]
+    *
+    * @param from the starting index (included)
+    * @param to the end index (excluded)
+    * @return a new Dataframe with those rows
+    * @throws IllegalArgumentException if the range is invalid
+    */
+    public Dataframe selectRowsRange(int from, int to) {
+        if (from < 0 || to > data_tab[0].getData().size() || from >= to) {
+            throw new IllegalArgumentException("Invalid row range");
+        }
+
+        int[] indices = new int[to - from];
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = from + i;
+        }
+
+        return selectRows(indices);
+    }
+
+    /**
+    * Returns a new Dataframe containing only the specified columns (by labels).
+    * Mimics Pandas' df[["col1", "col2", ...]]
+    *
+    * @param labels the labels of the columns to include
+    * @return a new Dataframe with those columns
+    * @throws IllegalArgumentException if any label is not found
+    */
+    public Dataframe selectColumns (String... labels) {
+        List<Series<?>> selectedSeries = new ArrayList<>();
+        List<String> selectedLabels = new ArrayList<>();
+
+        for (String label : labels) {
+            boolean found = false;
+            for (Series<?> series : data_tab) {
+                if (series.getName().equals(label)) {
+                    selectedSeries.add(series);
+                    selectedLabels.add(label);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new IllegalArgumentException("Column not found: " + label);
+            }
+        }
+
+        Object[] newData = new Object[selectedSeries.size()];
+        for (int i = 0; i < selectedSeries.size(); i++) {
+            newData[i] = selectedSeries.get(i).getData().toArray();
+        }
+
+        return new Dataframe(selectedLabels.toArray(new String[0]), newData);
+    }
+
+    /**
+     * Returns a new Dataframe containing only the rows for which the given predicate evaluates to true,
+     * based on the values in a specified column.
+     * <p>
+     * This method provides a flexible way to perform advanced filtering, similar to Pandas' conditional selection
+     * (e.g., {@code df[df["col"] > 10]}). The user is responsible for ensuring that the predicate correctly handles
+     * the type of the column's values.
+     * <p>
+     * Example usage:
+     * <pre>{@code
+     *     Dataframe df = ...;
+     *     Dataframe filtered = df.filterRows("Age", value -> ((Integer) value) > 30);
+     * }</pre>
+     *
+     * @param columnLabel The label of the column to use for filtering.
+     * @param condition   A predicate that takes a column value and returns true if the corresponding row should be kept.
+     * @return A new Dataframe containing only the rows where the condition is true.
+     * @throws IllegalArgumentException if the specified column does not exist.
+     */
+    public Dataframe filterRows(String columnLabel, Predicate<Object> condition) {
+        int colIndex = -1;
+        for (int i = 0; i < data_tab.length; i++) {
+            if (data_tab[i].getName().equals(columnLabel)) {
+                colIndex = i;
+                break;
+            }
+        }
+
+        if (colIndex == -1) {
+            throw new IllegalArgumentException("Column not found: " + columnLabel);
+        }
+
+        List<?> targetColumn = data_tab[colIndex].getData();
+        List<Integer> matchingIndices = new ArrayList<>();
+
+        for (int i = 0; i < targetColumn.size(); i++) {
+            Object value = targetColumn.get(i);
+            if (condition.test(value)) {
+                matchingIndices.add(i);
+            }
+        }
+
+        // convert List<Integer> to int[] for selectRows
+        int[] indices = matchingIndices.stream().mapToInt(Integer::intValue).toArray();
+        return selectRows(indices);
     }
 
     /**
