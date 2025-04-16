@@ -75,14 +75,9 @@ TODO
 - [X] CSV file reading
 - [X] Data display methods
 - [X] Selection by index, label, and condition
-- [ ] Basic statistics and advanced operations
+- [X] Basic statistics and advanced operations
 
 ### Deployment & Publishing
-- [ ] Automated Maven publishing
+- [X] Maven package publishing
 - [ ] Docker image with demonstration scenario
 - [ ] Cloud deployment via Terraform and Ansible
-
-### Documentation & Delivery
-- [ ] Generated documentation and published site
-- [ ] Final delivery on Moodle
-
