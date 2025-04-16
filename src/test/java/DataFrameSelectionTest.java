@@ -84,4 +84,43 @@ public class DataFrameSelectionTest {
         assertEquals(22, result.getDataTab()[1].getData().get(0));
         assertEquals(23, result.getDataTab()[1].getData().get(1));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSelectRowsRangeInvalidRange() {
+        Dataframe df = new Dataframe(new String[]{"Name", "Age"},
+                new String[]{"Alice", "Bob", "Charlie", "Dora"},
+                new int[]{22, 25, 30, 27});
+
+        df.selectRowsRange(3, 1); // Invalid range
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSelectRowsIndicesOutOfBounds() {
+        Dataframe df = new Dataframe(new String[]{"Name", "Age"},
+                new String[]{"Alice", "Bob", "Charlie", "Dora"},
+                new int[]{22, 25, 30, 27});
+
+        df.selectRows(0, 5); // Index out of bounds
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSelectColumnsInvalidColumnName() {
+        Dataframe df = new Dataframe(new String[]{"Name", "Age", "Score"},
+                new String[]{"Alice", "Bob", "Charlie"},
+                new int[]{22, 25, 30},
+                new double[]{10.5, 9.8, 12.0});
+
+        df.selectColumns("Name", "InvalidColumn"); // Invalid column name
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFilterRowsInvalidColumnName() {
+        Dataframe df = new Dataframe(new String[]{"Name", "Age"},
+                new String[]{"Alice", "Bob", "Charlie", "Dora"},
+                new Integer[]{22, 25, 30, 27});
+
+        Predicate<Object> olderThan25 = val -> ((Integer) val) > 25;
+
+        df.filterRows("InvalidColumn", olderThan25); // Invalid column name
+    }
 }

@@ -142,6 +142,7 @@ public class Dataframe {
      * @param from the start index (inclusive)
      * @param to the end index (exclusive)
      * @return a new Dataframe with selected rows
+     * @throws IllegalArgumentException if the range is invalid
      */
     public Dataframe selectRowsRange(int from, int to) {
         if (from < 0 || to > data_tab[0].getData().size() || from >= to) {
