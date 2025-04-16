@@ -135,15 +135,16 @@ public class Dataframe {
         return new Dataframe(getLabels(), newData);
     }
 
+
     /**
-     * Returns a new Dataframe containing rows in the range [from, to).
-     * Mimics Pandas' df.iloc[from:to].
-     *
-     * @param from the start index (inclusive)
-     * @param to the end index (exclusive)
-     * @return a new Dataframe with selected rows
-     * @throws IllegalArgumentException if the range is invalid
-     */
+    * Returns a new Dataframe containing only the specified rows (by range).
+    * Mimics Pandas' df.iloc[from:to]
+    *
+    * @param from the starting index (included)
+    * @param to the end index (excluded)
+    * @return a new Dataframe with those rows
+    * @throws IllegalArgumentException if the range is invalid
+*/
     public Dataframe selectRowsRange(int from, int to) {
         if (from < 0 || to > data_tab[0].getData().size() || from >= to) {
             throw new IllegalArgumentException("Invalid row range");
@@ -157,6 +158,14 @@ public class Dataframe {
         return selectRows(indices);
     }
 
+    /**
+    * Returns a new Dataframe containing only the specified columns (by labels).
+    * Mimics Pandas' df[["col1", "col2", ...]]
+    *
+    * @param labels the labels of the columns to include
+    * @return a new Dataframe with those columns
+    * @throws IllegalArgumentException if any label is not found
+*/
     public Dataframe selectColumns (String... labels) {
         List<Series<?>> selectedSeries = new ArrayList<>();
         List<String> selectedLabels = new ArrayList<>();
