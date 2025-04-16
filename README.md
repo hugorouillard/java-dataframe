@@ -74,7 +74,7 @@ TODO
 - [X] Implementation of `Series` and `DataFrame`
 - [X] CSV file reading
 - [X] Data display methods
-- [ ] Selection by index, label, and condition
+- [X] Selection by index, label, and condition
 - [ ] Basic statistics and advanced operations
 
 ### Deployment & Publishing
