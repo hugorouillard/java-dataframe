@@ -36,3 +36,12 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: codecov-coverage
+      - name: Generate Javadoc
+        run: mvn javadoc:javadoc
+
+      - name: Deploy Javadoc to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/reports/javadoc

@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/hugorouillard/java-dataframe/actions/workflows/ci.yml/badge.svg)](https://github.com/hugorouillard/java-dataframe/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/hugorouillard/java-dataframe/graph/badge.svg?token=LAYFTJTRZQ)](https://codecov.io/gh/hugorouillard/java-dataframe)
+[![License](https://img.shields.io/github/license/hugorouillard/java-dataframe)](https://github.com/hugorouillard/java-dataframe/blob/main/LICENSE)
+
 
 ## Overview
 
@@ -79,5 +81,6 @@ TODO
 
 ### Deployment & Publishing
 - [X] Maven package publishing
+- [X] Javadoc deployment to GitHub Pages
 - [ ] Docker image with demonstration scenario
 - [ ] Cloud deployment via Terraform and Ansible
